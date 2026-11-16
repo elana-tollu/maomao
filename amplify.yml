@@ -1,0 +1,21 @@
+version: 1
+applications:
+  - appRoot: professional-site
+    frontend:
+      phases:
+        preBuild:
+          commands:
+            - corepack enable
+            - pnpm install --frozen-lockfile
+        build:
+          commands:
+            - pnpm --filter professional-site build
+      artifacts:
+        baseDirectory: dist
+        files:
+          - '**/*'
+      cache:
+        paths:
+          - node_modules/**/*
+          - professional-site/node_modules/**/*
+

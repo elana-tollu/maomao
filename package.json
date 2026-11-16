@@ -1,0 +1,9 @@
+{
+  "name": "my-personal-platform",
+  "packageManager": "pnpm@10.28.2",
+  "private": true,
+  "scripts": {
+    "dev:professional-site": "pnpm --filter professional-site dev",
+    "build:professional-site": "pnpm --filter professional-site build"
+  }
+}
