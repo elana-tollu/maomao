@@ -1,0 +1,96 @@
+name: Build and Deploy Astro Site
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'professional-site/**'
+      - 'shared/**'
+      - 'package.json'
+      - 'pnpm-lock.yaml'
+      - '.github/workflows/deploy.yml'
+
+# Обязательно для работы OIDC-авторизации в AWS
+permissions:
+  id-token: write
+  contents: write
+
+jobs:
+  deploy:
+    name: Build & Deploy to S3 + CloudFront
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Generate release tag
+        id: meta
+        run: |
+          DATE_STR=$(date -u +'%Y.%m.%d')
+          TAG="${DATE_STR}-${{ github.run_number }}"
+          echo "release_tag=${TAG}" >> "$GITHUB_OUTPUT"
+          echo "Сформирован тег релиза: ${TAG}"
+
+      - name: Create Git tag
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@://github.com"
+          git tag "${{ steps.meta.outputs.release_tag }}"
+          git push origin "${{ steps.meta.outputs.release_tag }}"
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10 # Укажите вашу версию pnpm (или уберите строку, если версия прописана в packageManager в package.json)
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build Astro site
+        run: pnpm --filter professional-site build
+
+      - name: Configure AWS credentials via OIDC
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ vars.AWS_ROLE_ARN }}
+          aws-region: eu-north-1 # Укажите ваш основной регион (например, eu-north-1)
+
+      - name: Upload static assets to versioned folder
+        run: |
+          aws s3 sync professional-site/dist s3://${{ vars.S3_SITE_BUCKET }}/releases/${{ steps.meta.outputs.release_tag }} \
+          --exclude "*.html" \
+          --exclude "robots.txt" \
+          --exclude "llms.txt" \
+          --cache-control "public, max-age=31536000, immutable"
+
+      - name: Upload HTML and root files to versioned folder
+        run: |
+          aws s3 sync professional-site/dist s3://${{ vars.S3_SITE_BUCKET }}/releases/${{ steps.meta.outputs.release_tag }} \
+            --exclude "*" \
+            --include "*.html" \
+            --include "robots.txt" \
+            --include "llms.txt" \
+            --cache-control "public, max-age=0, must-revalidate"
+
+      - name: Switch active release in CloudFront KeyValueStore
+        run: |
+          # Получаем текущий ETag хранилища (требуется для безопасного обновления)
+          ETAG=$(aws cloudfront-keyvaluestore describe-key-value-store \
+            --kvs-arn "${{ vars.RELEASE_KVS_ARN }}" \
+            --query "ETag" \
+            --output text)
+            
+          # Атомарно переключаем активный релиз на новую папку
+          aws cloudfront-keyvaluestore put-key \
+            --kvs-arn "${{ vars.RELEASE_KVS_ARN }}" \
+            --if-match "${ETAG}" \
+            --key "current_release" \
+            --value "${{ steps.meta.outputs.release_tag }}"
