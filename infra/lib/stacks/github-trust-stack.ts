@@ -27,9 +27,10 @@ export class GithubTrustStack extends cdk.Stack {
             assumedBy: new iam.WebIdentityPrincipal(githubProvider.openIdConnectProviderArn, {
                 StringEquals: {
                     'token.actions.githubusercontent.com:aud': 'sts.amazonaws.com',
-                }, StringLike: {
+                }
+                , StringLike: {
                     // Разрешаем деплой только из ветки main вашего репозитория
-                    'token.actions.githubusercontent.com:sub': 'repo:elana-tollu/maomao:ref:refs/heads/main',
+                    'token.actions.githubusercontent.com:sub': 'repo:elana-tollu@86573796/maomao@1460506820:ref:refs/heads/main',
                 },
             }),
         });
