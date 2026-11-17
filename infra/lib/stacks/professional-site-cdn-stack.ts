@@ -5,7 +5,7 @@ import * as origins from 'aws-cdk-lib/aws-cloudfront-origins';
 import * as route53 from 'aws-cdk-lib/aws-route53';
 import * as targets from 'aws-cdk-lib/aws-route53-targets';
 import * as s3 from 'aws-cdk-lib/aws-s3';
-import { Construct } from 'constructs';
+import {Construct} from 'constructs';
 import * as path from "path";
 
 export interface ProfessionalSiteCdnStackProps extends cdk.StackProps {
@@ -17,15 +17,21 @@ export interface ProfessionalSiteCdnStackProps extends cdk.StackProps {
 
 export class ProfessionalSiteCdnStack extends cdk.Stack {
     public readonly distribution: cloudfront.Distribution;
+    public readonly releaseStore: cloudfront.KeyValueStore;
 
     constructor(scope: Construct, id: string, props: ProfessionalSiteCdnStackProps) {
         super(scope, id, props);
+
+        this.releaseStore = new cloudfront.KeyValueStore(this, 'ReleaseKeyValueStore', {
+            keyValueStoreName: 'professional-site-releases',
+        });
 
         const urlRewriteFunction = new cloudfront.Function(this, 'UrlRewriteFunction', {
             code: cloudfront.FunctionCode.fromFile({
                 filePath: path.join(__dirname, '../functions/url-rewrite.js'),
             }),
             runtime: cloudfront.FunctionRuntime.JS_2_0,
+            keyValueStore: this.releaseStore,
         });
 
         const storageBucketForOrigin = s3.Bucket.fromBucketAttributes(this, 'ImportedStorageBucket', {
@@ -77,6 +83,10 @@ export class ProfessionalSiteCdnStack extends cdk.Stack {
 
         new cdk.CfnOutput(this, 'DistributionDomainName', {
             value: this.distribution.distributionDomainName,
+        });
+
+        new cdk.CfnOutput(this, 'ReleaseKvsArn', {
+            value: this.releaseStore.keyValueStoreArn,
         });
     }
 }
