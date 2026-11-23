@@ -3,9 +3,10 @@ export const site = {
   url: 'https://elana.tolliu.pro', // must match `site` in astro.config.mjs
   name: 'Elana Tolliu',
   email: 'elana.tolliu@gmail.com',
-  fiverr: 'https://www.fiverr.com/s/vbrRkrr',
+  fiverr: 'https://www.fiverr.com/s/vbrRkrr', // voice-over gig
+  fiverrEditing: 'https://www.fiverr.com/s/VrDl6yB', // editing gig
   // Links to other profiles: help search engines and LLMs connect them to the person
-  profiles: ['https://www.fiverr.com/s/vbrRkrr'],
+  profiles: ['https://www.fiverr.com/s/vbrRkrr', 'https://www.fiverr.com/s/VrDl6yB'],
   business: {
     owner: 'Elana Tolliu',
     legalName: 'Elana Tolliu (enskild firma)',
@@ -24,8 +25,9 @@ export const site = {
   ],
 };
 
-export const mailto = (subject: string) =>
-  `mailto:${site.email}?subject=${encodeURIComponent(subject)}`;
+export const mailto = (subject: string, body?: string) =>
+  `mailto:${site.email}?subject=${encodeURIComponent(subject)}` +
+  (body ? `&body=${encodeURIComponent(body.replace(/\n/g, '\r\n'))}` : '');
 
 // Shared schema.org Person node. Every page references it by @id.
 export const personLd = {

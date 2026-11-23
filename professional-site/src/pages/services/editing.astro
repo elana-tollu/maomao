@@ -6,6 +6,20 @@ const title = 'Russian editing: manuscripts, machine translation, AI text | Elan
 const description =
   'Russian-language editor in Sweden. Editing of manuscripts, post-editing of machine translation and editing of AI-generated text for clarity, accuracy and natural style. Request a quote.';
 
+const editingMail = mailto(
+  'Russian editing request',
+  `Hello Elana,
+
+I would like a quote for editing.
+
+Type of text (manuscript / machine translation / AI-generated / other):
+Approximate length (words or pages):
+Deadline:
+Source text language, if machine translation (English / Swedish):
+Anything else I should know:
+`,
+);
+
 const examples = [
   {
     kind: 'Machine translation',
@@ -22,6 +36,7 @@ const examples = [
 ];
 
 const faq = [
+  ['Do you translate?', 'No. I edit Russian texts. If your text is a machine translation, I can check it against an English or Swedish original, but I do not translate from scratch.'],
   ['What do I receive?', 'The edited text, plus a version with tracked changes and comments (Word or Google Docs) so you can see every decision.'],
   ['How is the price calculated?', 'By word count and the type of text, depending on how much work it needs. Send me the text or a sample and I will reply with a fixed quote.'],
   ['How fast can you deliver?', 'I confirm the deadline in the quote, based on the length and condition of the text.'],
@@ -63,9 +78,10 @@ const jsonLd = {
         texts and AI-generated content.
       </p>
       <div class="actions">
-        <a class="btn" href={mailto('Russian editing request')}>Send me your text</a>
-        <a class="btn alt" href="#examples">See before and after</a>
+        <a class="btn" target="_blank" rel="noopener noreferrer" href={site.fiverrEditing}>Order on Fiverr</a>
+        <a class="btn alt" href={editingMail}>Email for custom projects</a>
       </div>
+      <p class="hero-link"><a href="#examples">See before and after ↓</a></p>
     </div>
   </div>
 
@@ -79,7 +95,7 @@ const jsonLd = {
         </article>
         <article class="card">
           <h3>Machine translation</h3>
-          <p>Post-editing for accuracy against the source, natural wording and consistent terminology.</p>
+          <p>Post-editing of Russian machine translation: natural wording and consistent terminology, checked against an English or Swedish source.</p>
         </article>
         <article class="card">
           <h3>AI-generated text</h3>
@@ -133,8 +149,15 @@ const jsonLd = {
   <section id="contact">
     <div class="wrap">
       <h2>Send me your text</h2>
-      <p>Tell me the language pair or text type, the length and your deadline, and I will send a quote.</p>
-      <p><a class="btn" href={mailto('Russian editing request')}>Request a quote</a></p>
+      <p>Tell me the type of text, its length and your deadline, and I will send a quote. For machine translation, please include the source text.</p>
+      <div class="actions">
+        <a class="btn" target="_blank" rel="noopener noreferrer" href={site.fiverrEditing}>Order on Fiverr</a>
+        <a class="btn alt" href={editingMail}>Request a quote by email</a>
+      </div>
+      <p class="note">
+        Prefer to write from your own email? Send your message to&nbsp;
+        <a href={`mailto:${site.email}`}>{site.email}</a>.
+      </p>
     </div>
   </section>
 </Base>
