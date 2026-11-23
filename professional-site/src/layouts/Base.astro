@@ -3,6 +3,8 @@
 import '@fontsource/pt-serif/400.css';
 import '@fontsource/pt-serif/700.css';
 import '@fontsource-variable/source-sans-3';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
 
 interface Props {
   title: string;
@@ -30,12 +32,15 @@ const og = new URL(ogImage, Astro.site).href;
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
     <meta property="og:image" content={og} />
+    <meta property="og:site_name" content="Elana Tolliu" />
     <meta name="twitter:card" content="summary_large_image" />
 
     {jsonLd && <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}
   </head>
   <body>
-    <slot />
+    <Header />
+    <main id="main"><slot /></main>
+    <Footer />
   </body>
 </html>
 
@@ -66,9 +71,14 @@ const og = new URL(ogImage, Astro.site).href;
   h1, h2, h3 { font-family: var(--serif); line-height: 1.15; margin: 0; }
   p { margin: 0 0 1rem; max-width: 65ch; }
 
-  header.top { display: flex; justify-content: space-between; align-items: baseline; padding: 1.5rem 0; }
-  .brand { font-family: var(--serif); font-weight: 700; color: var(--ink); text-decoration: none; }
-  nav a { margin-left: 1.5rem; color: var(--ink); }
+  .skip { position: absolute; left: -999px; top: 0; background: var(--ink); color: #fff; padding: 0.5rem 1rem; z-index: 10; }
+  .skip:focus { left: 0; }
+
+  header.top { border-bottom: 1px solid var(--rule); }
+  header.top .wrap { display: flex; justify-content: space-between; align-items: baseline; padding-top: 1.25rem; padding-bottom: 1.25rem; gap: 1rem; flex-wrap: wrap; }
+  .brand { font-family: var(--serif); font-weight: 700; font-size: 1.2rem; color: var(--ink); text-decoration: none; }
+  nav a { margin-left: 1.5rem; color: var(--ink); text-decoration: none; padding-bottom: 0.15rem; border-bottom: 2px solid transparent; }
+  nav a:hover, nav a[aria-current='page'] { border-bottom-color: var(--accent); }
 
   .hero { padding: 4rem 0 4.5rem; }
   .hero h1 { font-size: clamp(2.4rem, 6.5vw, 4.75rem); font-weight: 700; max-width: 17ch; letter-spacing: -0.01em; }
@@ -93,16 +103,46 @@ const og = new URL(ogImage, Astro.site).href;
   summary { cursor: pointer; color: var(--accent); }
   details p { margin-top: 0.5rem; color: var(--muted); }
 
+  .hero.with-portrait { display: grid; grid-template-columns: 1.4fr 1fr; gap: 3rem; align-items: center; }
+  .hero .portrait { width: 100%; height: auto; border-radius: 4px; }
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); gap: 1.5rem; }
+  .card { border: 1px solid var(--rule); background: #fff; padding: 1.5rem; display: flex; flex-direction: column; }
+  .card h3 { font-size: 1.4rem; margin-bottom: 0.5rem; }
+  .card p { color: var(--ink); }
+  .card .more { margin-top: auto; font-weight: 600; }
+  .ba { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem; }
+  .ba blockquote { margin: 0; padding: 1rem 1.25rem; border-left: 4px solid var(--rule); background: #fff; }
+  .ba blockquote.after { border-left-color: var(--accent); }
+  .ba .label { display: block; font-size: 0.8rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.35rem; }
+  ol.steps { padding-left: 1.25rem; max-width: 65ch; }
+  ol.steps li { padding: 0.35rem 0; }
+  dl.facts { display: grid; grid-template-columns: max-content 1fr; gap: 0.6rem 2rem; max-width: 40rem; margin: 0; }
+  dl.facts dt { font-weight: 600; }
+  dl.facts dd { margin: 0; }
+  .prose h2 { font-size: 1.5rem; margin: 2rem 0 0.75rem; }
+  .prose ul { max-width: 65ch; padding-left: 1.25rem; }
+  .note { color: var(--muted); font-size: 0.95rem; }
+  .page-title { padding: 3rem 0 1rem; }
+  .page-title h1 { font-size: clamp(2rem, 5vw, 3rem); }
   ul.plain { list-style: none; padding: 0; margin: 0; max-width: 65ch; }
   ul.plain li { padding: 0.6rem 0; border-top: 1px solid var(--rule); }
   ul.plain li:first-child { border-top: 0; }
   .faq details { border-top: 1px solid var(--rule); padding: 0.9rem 0; margin: 0; }
   .faq summary { font-weight: 600; color: var(--ink); }
 
-  footer { padding: 2rem 0 3rem; border-top: 1px solid var(--rule); color: var(--muted); font-size: 0.9rem; }
+  .site-footer { padding: 2.5rem 0 3rem; border-top: 1px solid var(--rule); color: var(--muted); font-size: 0.95rem; }
+  .site-footer .cols { display: flex; justify-content: space-between; gap: 2rem; flex-wrap: wrap; }
+  .site-footer .brand-line { font-family: var(--serif); font-weight: 700; color: var(--ink); margin-bottom: 0.25rem; }
+  .site-footer ul { list-style: none; margin: 0; padding: 0; }
+  .site-footer nav a { margin: 0; }
+  .site-footer li { padding: 0.15rem 0; }
+  .site-footer .legal { margin: 1.5rem 0 0; font-size: 0.85rem; max-width: none; }
 
   @media (max-width: 40rem) {
     .demo { grid-template-columns: 1fr; }
+    .hero.with-portrait { grid-template-columns: 1fr; }
+    .cards { grid-template-columns: 1fr; }
+    .ba { grid-template-columns: 1fr; }
     nav a { margin-left: 1rem; }
   }
 </style>

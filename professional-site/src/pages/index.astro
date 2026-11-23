@@ -1,9 +1,102 @@
 ---
+import { Image } from 'astro:assets';
 import Base from '../layouts/Base.astro';
+import portrait from '../assets/portrait.jpg';
+import { site, personLd, mailto } from '../data/site';
 
+const title = 'Elana Tolliu: Russian editor and voice-over artist in Sweden';
 const description =
-  '';
+  'Freelance Russian-language editor and voice-over artist near Gothenburg, Sweden. Editing of manuscripts, machine-translated and AI-generated texts, and Russian narration for e-learning and video.';
 
-const jsonLd = {};
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    { ...personLd },
+    {
+      '@type': 'WebSite',
+      '@id': `${site.url}/#website`,
+      url: site.url,
+      name: site.name,
+      inLanguage: 'en',
+      publisher: { '@id': `${site.url}/#me` },
+    },
+    {
+      '@type': 'ProfessionalService',
+      '@id': `${site.url}/#business`,
+      name: site.business.legalName,
+      url: site.url,
+      email: site.email,
+      founder: { '@id': `${site.url}/#me` },
+      areaServed: 'Worldwide',
+      address: personLd.address,
+      vatID: site.business.vat,
+      makesOffer: [
+        { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Russian editing', url: `${site.url}/services/editing/` } },
+        { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Russian voice-over', url: `${site.url}/services/voice-over/` } },
+      ],
+    },
+  ],
+};
 ---
-<Base title={``} description={description} jsonLd={jsonLd}></Base>
+<Base title={title} description={description} jsonLd={jsonLd}>
+  <div class="wrap">
+    <div class="hero with-portrait">
+      <div>
+        <h1>Words, language and voice in Russian.</h1>
+        <p class="lede">
+          I'm a freelance Russian-language editor and voice-over artist near Gothenburg, Sweden.
+          I help companies and authors make Russian texts and audio clear, natural and professional.
+        </p>
+        <div class="actions">
+          <a class="btn" href="#services">Explore my services</a>
+          <a class="btn alt" href="#contact">Get in touch</a>
+        </div>
+      </div>
+      <Image
+        class="portrait"
+        src={portrait}
+        alt="Illustrated portrait of Elana Tolliu"
+        widths={[320, 480, 640]}
+        sizes="(max-width: 40rem) 90vw, 28rem"
+        loading="eager"
+      />
+    </div>
+  </div>
+
+  <section id="services">
+    <div class="wrap">
+      <h2>Services</h2>
+      <div class="cards">
+        <article class="card">
+          <h3>Editing</h3>
+          <p>Editing of Russian manuscripts, machine-translated texts and AI-generated content.</p>
+          <a class="more" href="/services/editing/">Explore editing →</a>
+        </article>
+        <article class="card">
+          <h3>Voice-over</h3>
+          <p>Native Russian narration for e-learning, corporate training, instructional videos and documentaries.</p>
+          <a class="more" href="/services/voice-over/">Listen and learn more →</a>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section id="about">
+    <div class="wrap">
+      <h2>A little about me</h2>
+      <p>
+        I spent several years as an editor at a publisher of professional educational literature, and later
+        worked on editing AI-generated UX content. Today I work independently in Sweden, helping clients
+        make Russian texts and recordings that are accurate, clear and pleasant to read or hear.
+      </p>
+    </div>
+  </section>
+
+  <section id="contact">
+    <div class="wrap">
+      <h2>Have a project in mind?</h2>
+      <p>Get in touch. I'd be happy to hear about it, and I reply within one business day.</p>
+      <p><a class="btn" href={mailto('Project enquiry')}>{site.email}</a></p>
+    </div>
+  </section>
+</Base>

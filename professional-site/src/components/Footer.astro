@@ -1,0 +1,25 @@
+---
+import { site } from '../data/site';
+const b = site.business;
+---
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="cols">
+      <div>
+        <p class="brand-line">{site.name}</p>
+        <p>Russian editing and voice-over, based near Gothenburg, Sweden.</p>
+        <p><a href={`mailto:${site.email}`}>{site.email}</a></p>
+      </div>
+      <nav aria-label="Footer">
+        <ul>
+          {site.nav.map((item) => <li><a href={item.href}>{item.label}</a></li>)}
+          <li><a href="/business-information/">Business information</a></li>
+          <li><a href="/privacy-and-data-protection/">Privacy and data protection</a></li>
+        </ul>
+      </nav>
+    </div>
+    <p class="legal">
+      {b.legalName} · Org.nr {b.orgNr} · VAT {b.vat} · Approved for F-tax
+    </p>
+  </div>
+</footer>

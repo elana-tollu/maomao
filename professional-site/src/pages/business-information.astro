@@ -1,0 +1,57 @@
+---
+import Base from '../layouts/Base.astro';
+import { site, personLd } from '../data/site';
+
+const b = site.business;
+const title = 'Business information | Elana Tolliu';
+const description =
+  'Business information for Elana Tolliu (enskild firma), Sweden: owner, organisation number, VAT number, address, contact details and F-tax status.';
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    { ...personLd },
+    {
+      '@type': 'ProfessionalService',
+      '@id': `${site.url}/#business`,
+      name: b.legalName,
+      founder: { '@id': `${site.url}/#me` },
+      url: site.url,
+      email: site.email,
+      vatID: b.vat,
+      taxID: b.orgNr,
+      address: {
+        '@type': 'PostalAddress',
+        streetAddress: b.street,
+        postalCode: b.postalCode,
+        addressLocality: b.city,
+        addressRegion: b.region,
+        addressCountry: 'SE',
+      },
+    },
+  ],
+};
+---
+<Base title={title} description={description} jsonLd={jsonLd}>
+  <div class="wrap">
+    <div class="page-title"><h1>Business information</h1></div>
+  </div>
+  <section>
+    <div class="wrap">
+      <dl class="facts">
+        <dt>Business owner</dt><dd>{b.owner}</dd>
+        <dt>Business name</dt><dd>{b.legalName}</dd>
+        <dt>Organisation number</dt><dd>{b.orgNr}</dd>
+        <dt>Business address</dt>
+        <dd>
+          <address style="font-style: normal">
+            {b.street}<br />{b.postalCode} {b.city}<br />{b.region}, {b.country}
+          </address>
+        </dd>
+        <dt>Email</dt><dd><a href={`mailto:${site.email}`}>{site.email}</a></dd>
+        <dt>VAT number</dt><dd>{b.vat}</dd>
+        <dt>Tax status</dt><dd>{b.taxStatus}</dd>
+      </dl>
+    </div>
+  </section>
+</Base>

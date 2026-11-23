@@ -1,0 +1,15 @@
+---
+import { site } from '../data/site';
+const path = Astro.url.pathname;
+---
+<a class="skip" href="#main">Skip to content</a>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="/">{site.name}</a>
+    <nav aria-label="Main">
+      {site.nav.map((item) => (
+        <a href={item.href} aria-current={path.startsWith(item.href) ? 'page' : undefined}>{item.label}</a>
+      ))}
+    </nav>
+  </div>
+</header>

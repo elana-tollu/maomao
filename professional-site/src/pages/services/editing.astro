@@ -1,0 +1,140 @@
+---
+import Base from '../../layouts/Base.astro';
+import { site, personLd, mailto } from '../../data/site';
+
+const title = 'Russian editing: manuscripts, machine translation, AI text | Elana Tolliu';
+const description =
+  'Russian-language editor in Sweden. Editing of manuscripts, post-editing of machine translation and editing of AI-generated text for clarity, accuracy and natural style. Request a quote.';
+
+const examples = [
+  {
+    kind: 'Machine translation',
+    before: 'Пожалуйста, нажмите на кнопку для того, чтобы осуществить продолжение оплаты вашего заказа.',
+    after: 'Чтобы оплатить заказ, нажмите «Продолжить».',
+    changes: 'Removed word-for-word phrasing, restored the natural order, shortened the instruction.',
+  },
+  {
+    kind: 'AI-generated text',
+    before: 'В современном быстро меняющемся мире крайне важно понимать, насколько важной является безопасность данных.',
+    after: 'Безопасность данных важна для любой компании.',
+    changes: 'Cut the empty opening and the repetition, kept one clear statement.',
+  },
+];
+
+const faq = [
+  ['What do I receive?', 'The edited text, plus a version with tracked changes and comments (Word or Google Docs) so you can see every decision.'],
+  ['How is the price calculated?', 'By word count and the type of text, depending on how much work it needs. Send me the text or a sample and I will reply with a fixed quote.'],
+  ['How fast can you deliver?', 'I confirm the deadline in the quote, based on the length and condition of the text.'],
+  ['Is my text confidential?', 'Yes. Your text is used only for your project. I am happy to sign an NDA on request.'],
+  ['Do you invoice companies?', 'Yes. I am a registered Swedish sole proprietor approved for F-tax and issue proper invoices.'],
+];
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    { ...personLd },
+    {
+      '@type': 'Service',
+      '@id': `${site.url}/services/editing/#service`,
+      name: 'Russian editing',
+      serviceType: 'Editing of Russian-language texts, machine translation post-editing, AI text editing',
+      provider: { '@id': `${site.url}/#me` },
+      areaServed: 'Worldwide',
+      availableLanguage: 'ru',
+      description,
+    },
+    {
+      '@type': 'FAQPage',
+      mainEntity: faq.map(([q, a]) => ({
+        '@type': 'Question',
+        name: q,
+        acceptedAnswer: { '@type': 'Answer', text: a },
+      })),
+    },
+  ],
+};
+---
+<Base title={title} description={description} jsonLd={jsonLd}>
+  <div class="wrap">
+    <div class="hero">
+      <h1>Russian editing that reads naturally.</h1>
+      <p class="lede">
+        I edit Russian-language texts for clarity, accuracy and tone: manuscripts, machine-translated
+        texts and AI-generated content.
+      </p>
+      <div class="actions">
+        <a class="btn" href={mailto('Russian editing request')}>Send me your text</a>
+        <a class="btn alt" href="#examples">See before and after</a>
+      </div>
+    </div>
+  </div>
+
+  <section id="what">
+    <div class="wrap">
+      <h2>What I edit</h2>
+      <div class="cards">
+        <article class="card">
+          <h3>Manuscripts</h3>
+          <p>Structure, style, clarity and grammar. I worked for several years as an editor of professional educational literature.</p>
+        </article>
+        <article class="card">
+          <h3>Machine translation</h3>
+          <p>Post-editing for accuracy against the source, natural wording and consistent terminology.</p>
+        </article>
+        <article class="card">
+          <h3>AI-generated text</h3>
+          <p>Editing for tone, factual reliability and natural Russian. I have edited AI-generated UX content professionally.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section id="process">
+    <div class="wrap">
+      <h2>My process</h2>
+      <ol class="steps">
+        <li><strong>Analysis.</strong> I read the text, the purpose and the audience, and agree the scope with you.</li>
+        <li><strong>Editing.</strong> I edit for structure, style, accuracy and language.</li>
+        <li><strong>Check.</strong> A second read-through, including terminology and consistency.</li>
+        <li><strong>Final version.</strong> You get the clean text and a tracked-changes version.</li>
+      </ol>
+    </div>
+  </section>
+
+  <section id="examples">
+    <div class="wrap">
+      <h2>Before and after</h2>
+      <p>Short examples of the kind of change editing makes.</p>
+      {examples.map((e) => (
+        <div>
+          <h3>{e.kind}</h3>
+          <div class="ba" lang="ru">
+            <blockquote><span class="label" lang="en">Before</span>{e.before}</blockquote>
+            <blockquote class="after"><span class="label" lang="en">After</span>{e.after}</blockquote>
+          </div>
+          <p class="note">{e.changes}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section class="faq">
+    <div class="wrap">
+      <h2>Questions clients ask</h2>
+      {faq.map(([q, a]) => (
+        <details>
+          <summary>{q}</summary>
+          <p>{a}</p>
+        </details>
+      ))}
+    </div>
+  </section>
+
+  <section id="contact">
+    <div class="wrap">
+      <h2>Send me your text</h2>
+      <p>Tell me the language pair or text type, the length and your deadline, and I will send a quote.</p>
+      <p><a class="btn" href={mailto('Russian editing request')}>Request a quote</a></p>
+    </div>
+  </section>
+</Base>
