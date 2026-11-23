@@ -38,6 +38,7 @@ const og = new URL(ogImage, Astro.site).href;
     {jsonLd && <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}
   </head>
   <body>
+    <a class="skip" href="#main">Skip to content</a>
     <Header />
     <main id="main"><slot /></main>
     <Footer />
@@ -60,7 +61,7 @@ const og = new URL(ogImage, Astro.site).href;
     margin: 0;
     background: var(--paper);
     color: var(--ink);
-    font: 1.0625rem/1.6 var(--sans);
+    font: 1.0625rem/1.6 var(--sans), sans-serif;
   }
   a { color: var(--accent); text-underline-offset: 0.2em; }
   a:focus-visible, summary:focus-visible, audio:focus-visible {
@@ -68,7 +69,7 @@ const og = new URL(ogImage, Astro.site).href;
     outline-offset: 3px;
   }
   .wrap { max-width: 68rem; margin: 0 auto; padding: 0 1.25rem; }
-  h1, h2, h3 { font-family: var(--serif); line-height: 1.15; margin: 0; }
+  h1, h2, h3 { font-family: var(--serif), serif; line-height: 1.15; margin: 0; }
   p { margin: 0 0 1rem; max-width: 65ch; }
 
   .skip { position: absolute; left: -999px; top: 0; background: var(--ink); color: #fff; padding: 0.5rem 1rem; z-index: 10; }
@@ -76,14 +77,14 @@ const og = new URL(ogImage, Astro.site).href;
 
   header.top { border-bottom: 1px solid var(--rule); }
   header.top .wrap { display: flex; justify-content: space-between; align-items: baseline; padding-top: 1.25rem; padding-bottom: 1.25rem; gap: 1rem; flex-wrap: wrap; }
-  .brand { font-family: var(--serif); font-weight: 700; font-size: 1.2rem; color: var(--ink); text-decoration: none; }
+  .brand { font-family: var(--serif), serif; font-weight: 700; font-size: 1.2rem; color: var(--ink); text-decoration: none; }
   nav a { margin-left: 1.5rem; color: var(--ink); text-decoration: none; padding-bottom: 0.15rem; border-bottom: 2px solid transparent; }
   nav a:hover, nav a[aria-current='page'] { border-bottom-color: var(--accent); }
 
   .hero { padding: 4rem 0 4.5rem; }
   .hero h1 { font-size: clamp(2.4rem, 6.5vw, 4.75rem); font-weight: 700; max-width: 17ch; letter-spacing: -0.01em; }
   .hero .lede { font-size: 1.25rem; margin-top: 1.75rem; }
-  .hero .ru { font-family: var(--serif); font-style: italic; color: var(--muted); }
+  .hero .ru { font-family: var(--serif), serif; font-style: italic; color: var(--muted); }
   .actions { display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 2rem; }
   .btn {
     display: inline-block; padding: 0.75rem 1.4rem; border: 2px solid var(--accent);
@@ -133,7 +134,7 @@ const og = new URL(ogImage, Astro.site).href;
 
   .site-footer { padding: 2.5rem 0 3rem; border-top: 1px solid var(--rule); color: var(--muted); font-size: 0.95rem; }
   .site-footer .cols { display: flex; justify-content: space-between; gap: 2rem; flex-wrap: wrap; }
-  .site-footer .brand-line { font-family: var(--serif); font-weight: 700; color: var(--ink); margin-bottom: 0.25rem; }
+  .site-footer .brand-line { font-family: var(--serif), serif; font-weight: 700; color: var(--ink); margin-bottom: 0.25rem; }
   .site-footer ul { list-style: none; margin: 0; padding: 0; }
   .site-footer nav a { margin: 0; }
   .site-footer li { padding: 0.15rem 0; }
